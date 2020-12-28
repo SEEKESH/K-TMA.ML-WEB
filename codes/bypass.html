@@ -1,0 +1,44 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Linkvertise Bypass|Kitma Cheats</title>
+	<meta name="title" content="Linkvertise Bypass|Kitma Cheats">
+	<meta name="description" content="A website that bypasses linkvertise links.">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="http://lem0ns.me/linkvertise-bypass/">
+	<meta property="og:title" content="Linkvertise Bypass">
+	<meta property="og:description" content="An website that bypasses linkvertise links.">
+	<meta property="og:image" content="https://i.imgur.com/AqOO9yy.png">
+</head>
+<!--fuck thebypasser.com, not allowing to bypass yoink-->
+<body style="text-align: center; font-family: Arial;color: white;background: #000;">
+<h1>Linkvertise Bypass</h1>
+<h2>Put the linkvertise link into the box below and press Bypass.</h2>
+<input id="link"><br><br><button id="bypass" onclick="bypass(document.querySelector('#link').value)">Bypass Link</button><br><br><br>
+<a id="output"></a>
+<script>
+function bypass(url) {
+	let path = new URL(url).pathname
+	document.querySelector("#bypass").innerText = "Bypassing...";
+	fetch('https://publisher.linkvertise.com/api/v1/redirect/link/static'+path)
+    	.then(r=>r.json())
+    	.then(json=>{
+    		o = btoa(JSON.stringify({
+    			"timestamp": new Date().getTime(),
+    			"random": "6548307",
+    			"link_id": json.data.link.id
+    		})) //get link id, make serial and convert to base64
+    		let favicon = json.data.link.favicon_url
+    		fetch('https://publisher.linkvertise.com/api/v1/redirect/link'+path+'/target?serial='+o) //get link
+    		.then(r=>r.json())
+    		.then(json=>{
+    			let bypassedLink = new URLSearchParams(new URL(json.data.target).search).get('k');
+    			document.querySelector('#output').href = bypassedLink;
+    			document.querySelector('#output').innerText = bypassedLink
+    			document.querySelector("#bypass").innerText = "Bypass Link";
+    		})
+    	})
+}
+</script>
+</body>
+</html>
